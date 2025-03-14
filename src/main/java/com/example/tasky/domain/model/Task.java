@@ -60,6 +60,10 @@ public class Task {
         return userId;
     }
 
+    public void setUserId(UUID userId) {
+        this.userId = userId;
+    }
+
     public void updateTitle(String title){
         this.title = title;
         this.updateTime = ZonedDateTime.now();

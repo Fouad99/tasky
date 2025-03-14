@@ -1,0 +1,30 @@
+Definition of ports/out (Output Ports)
+The ports/out package defines interfaces for external dependencies that the application interacts with, such as databases, external APIs, messaging systems,
+or third-party services. These interfaces serve as abstractions, allowing the core business logic to remain decoupled from the specific implementation details
+of these external components.
+
+The key purpose of output ports is to:
+✅ Ensure that business logic does not depend on infrastructure details (such as databases or HTTP clients).
+✅ Allow easy swapping of external systems (e.g., switching from SQL to NoSQL, replacing an API provider, etc.).
+✅ Enable better testability by allowing the use of mocks or stubs in unit tests.
+
+Possible Interfaces in ports/out
+1️⃣ TaskPersistencePort
+📌 Purpose: Abstracts persistence operations for tasks.
+🔹 Used by: The service layer to interact with a database.
+🔹 Methods could include:
+        saveTask(Task task) → Persists a new or updated task.
+        findTaskById(UUID id) → Retrieves a task by ID.
+        findAllTasks() → Fetches all tasks.
+        deleteTask(UUID id) → Deletes a task.
+
+2️⃣ NotificationPort
+📌 Purpose: Sends notifications when certain task-related events occur (e.g., task assigned, completed).
+🔹 Used by: The service layer to trigger notifications via email, SMS, or push notifications.
+🔹 Methods could include:
+
+    sendTaskAssignedNotification(Task task, User user) → Notifies a user when assigned to a task.
+    sendTaskCompletedNotification(Task task) → Notifies relevant parties when a task is completed.
+
+These output ports ensure that business logic remains focused on the domain, withoutworrying about whether tasks are stored in a database, an API, or a file system.
+The actual implementation of these ports will be provided by adapters in the infrastructure/adapter/out/ layer.

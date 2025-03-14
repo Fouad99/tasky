@@ -1,5 +1,6 @@
 package com.example.tasky.domain.model;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -41,10 +42,20 @@ public class User {
     }
 
     public void addTask(Task task) {
-        this.tasks.add(task);
+        if (task != null){
+            task.setUserId(this.id);
+            this.tasks.add(task);
+        }
     }
 
     public void removeTask(Task task) {
-        this.tasks.remove(task);
+        if (task != null){
+            task.setUserId(null);
+            this.tasks.remove(task);
+        }
+    }
+
+    public Set<Task> getTasks() {
+        return Collections.unmodifiableSet(tasks); // Prevent external modification
     }
 }
