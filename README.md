@@ -107,17 +107,6 @@ infrastructure/
 The project includes test directories organized according to the hexagonal architecture:
 
 ```
-src/test/java/com/example/
-├── application/           # Tests for application services
-├── domain/                # Unit tests for domain logic
-├── infrastructure/        # Tests for adapters
-│   ├── adapter/
-│   │   ├── in/
-│   │   └── out/
-└── architecture/          # Architecture tests
-```
-
-```
 src/main/java/com/example/
 ├── application/
 │   ├── port/
@@ -132,18 +121,28 @@ src/main/java/com/example/
 │    ├── model/                # Business entities
 │    ├── exception/            # Domain-specific exceptions
 ├── infrastructure/
-    ├── adapter/
-    │   ├── in/               # Inbound (driving) adapters
-    │   │   ├── web/          # REST API implementation
-    │   │   │   ├── controller/
-    │   │   │   ├── dto/      # Data transfer objects
-    │   │   │   └── mapper/   # DTOs to domain mappers
-    │   │   └── event/        # Event-based adapters
-    │   └── out/              # Outbound (driven) adapters
-    │       ├── persistence/  # Database implementations
-    │       │   ├── entity/   # JPA entities
-    │       │   ├── repository/
-    │       │   └── mapper/   # Entity to domain mappers
-    │       └── external/     # External API clients
-    └── config/               # Configuration classes
+│    ├── adapter/
+│    │       ├── in/                        # Incoming adapters (API controllers, event listeners)
+│    │       │   ├── rest/                   # Web layer for HTTP requests (e.g., REST)
+│    │       │   │   ├── TaskController.java
+│    │       │   │   ├── UserController.java
+│    │       │   ├── graphql
+│    │       │   ├── event/             # Event listeners (e.g., for message queues)
+│    │       │   │   └── UserEventListener.java
+│    │       │   └── security/              # Security layer (Authentication, Authorization)
+│    │       │   │      └── SecurityController.java
+│    │       ├── out/                       # Outgoing adapters (external systems like DB, messaging)
+│    │       │   ├── persistence/           # Persistence layer (e.g., database interactions)
+│    │       │   │   ├── TaskPersistenceAdapter.java
+│    │       │   │   ├── UserPersistenceAdapter.java
+│    │       │   │   └── UserPersistenceService.java
+│    │       │   ├── messaging/             # Messaging layer (e.g., for external messaging systems)
+│    │       │   │   └── NotificationAdapter.java
+│    │       │   └── externalApi/           # External APIs (e.g., third-party services)
+│    │       │          └── ExternalApiAdapter.java
+│    ├── config/                        # Configuration files for the application setup
+│            ├── DatabaseConfig.java        # Database connections and setups
+│            ├── MessagingConfig.java       # External messaging system configurations
+│            └── SecurityConfig.java        # Security configurations (JWT, OAuth, etc.)
+
 ```

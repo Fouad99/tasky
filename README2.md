@@ -51,16 +51,26 @@ src/main/java/com/example/
 
 This layer contains **pure business logic** and is completely independent of frameworks.
 
-- `` → Business entities (core objects that represent the domain)
-- `` → Custom exceptions related to the domain
+-  → Business entities (core objects that represent the domain)
+-  → Custom exceptions related to the domain
 
 ### 2. **Application Layer (**``**)**
 
 This is where business rules and application logic reside.
 
-- `` → Defines input ports (use cases) consumed by controllers and event handlers.
-- `` → Defines output ports that interact with external dependencies (database, APIs, etc.).
-- `` → Implements use cases by orchestrating domain logic.
+-  → Defines input ports (use cases) consumed by controllers and event handlers.
+-  → Defines output ports that interact with external dependencies (database, APIs, etc.).
+-  → Implements use cases by orchestrating domain logic.
+- -  → for the service package : 
+  - Reason:
+    - Separation of concerns: The application/service/impl package is where the core business logic should reside.
+    - Adherence to Hexagonal Architecture: The service/impl classes implement the interfaces defined in port/in, orchestrating the application logic and interacting with the domain models.
+
+
+
+
+
+
 
 ### 3. **Infrastructure Layer (**``**)**
 

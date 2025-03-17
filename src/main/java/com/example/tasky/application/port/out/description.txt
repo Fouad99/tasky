@@ -18,7 +18,17 @@ Possible Interfaces in ports/out
         findAllTasks() → Fetches all tasks.
         deleteTask(UUID id) → Deletes a task.
 
-2️⃣ NotificationPort
+2️⃣ UserPersistencePort
+📌 Purpose: Abstracts persistence operations for users.
+🔹 Used by: The service layer to interact with a database.
+🔹 Methods could include:
+
+    saveUser(User user) → Persists a new or updated user.
+    findUserById(UUID id) → Retrieves a user by ID.
+    findAllUsers() → Fetches all users.
+    deleteUser(UUID id) → Deletes a user.
+
+3️⃣ NotificationPort
 📌 Purpose: Sends notifications when certain task-related events occur (e.g., task assigned, completed).
 🔹 Used by: The service layer to trigger notifications via email, SMS, or push notifications.
 🔹 Methods could include:
@@ -28,3 +38,21 @@ Possible Interfaces in ports/out
 
 These output ports ensure that business logic remains focused on the domain, withoutworrying about whether tasks are stored in a database, an API, or a file system.
 The actual implementation of these ports will be provided by adapters in the infrastructure/adapter/out/ layer.
+
+
+4️⃣ MessagingPort
+📌 Purpose: Handles sending and receiving messages to/from message brokers (e.g., Kafka, RabbitMQ).
+🔹 Used by: The service layer for event-driven communication with other parts of the system or external systems.
+🔹 Methods could include:
+
+    publishTaskCreatedEvent(Task task) → Publishes an event when a new task is created.
+    publishTaskCompletedEvent(Task task) → Publishes an event when a task is completed.
+    subscribeToTaskEvents() → Listens for task-related events.
+
+
+5️⃣ ExternalApiPort
+📌 Purpose: Interacts with third-party APIs, such as payment gateways or weather services.
+🔹 Used by: The service layer to make calls to external services.
+🔹 Methods could include:
+
+    callPaymentService(PaymentDetails paymentDetails) → Makes a call to an external payment gateway.

@@ -48,6 +48,14 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa -->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-jpa</artifactId>
+			<version>3.2.2</version>
+		</dependency>
+
+
 		<!-- Lombok (to reduce boilerplate code) -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -74,10 +82,11 @@
 			<artifactId>postgresql</artifactId>
 		</dependency>
 
-		<!-- Flyway (Database Migrations) -->
+
 		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 
 		<!-- Spring Boot DevTools (for development hot reload) -->
@@ -112,6 +121,8 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.15.0</version>
 		</dependency>
+
+
 	</dependencies>
 
 
@@ -144,5 +155,4 @@
 
 		</plugins>
 	</build>
-
 </project>

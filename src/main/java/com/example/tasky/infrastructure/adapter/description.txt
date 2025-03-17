@@ -1,0 +1,42 @@
+Breakdown of adapter/in (Inbound Adapters)
+Inbound adapters handle incoming requests from external sources and translate them into a format understood by the application. They consume input
+from various entry points, such as APIs, events, or other integrations, and delegate business logic to application services via ports/in.
+
+What belongs in adapter/in?
+    adapter/in/web
+
+        Purpose: Exposes HTTP-based endpoints (e.g., REST controllers) for external consumers.
+        Contains:
+        controller/ → Implements port/in/api interfaces (e.g., TaskController, UserController).
+        dto/ → Data transfer objects for API requests/responses (e.g., TaskRequestDto, TaskResponseDto).
+        mapper/ → Converts between dto objects and domain models.
+
+    adapter/in/event
+
+        Purpose: Listens to incoming events (e.g., from a message broker like Kafka) and processes them.
+        Contains:
+        Event listeners implementing port/in interfaces (e.g., TaskEventListener).
+
+Breakdown of adapter/out (Outbound Adapters)
+Outbound adapters handle outgoing communication with external systems. They implement port/out interfaces and serve as the bridge
+between the core application and infrastructure concerns like databases, messaging, or third-party APIs.
+
+What belongs in adapter/out?
+    adapter/out/persistence
+
+        Purpose: Implements database interactions using JPA, JDBC, or other persistence mechanisms.
+        Contains:
+        entity/ → Database entities (e.g., TaskEntity, UserEntity).
+        repository/ → Implements port/out/persistence interfaces using JPA repositories (e.g., TaskRepository).
+        mapper/ → Converts between entities and domain models.
+
+    adapter/out/external
+
+        Purpose: Handles calls to third-party services or APIs (e.g., sending notifications, fetching data from an external system).
+        Contains:
+        Implementations of port/out/external interfaces (e.g., ExternalApiAdapter).
+        adapter/out/messaging (If applicable)
+
+        Purpose: Sends messages to an external message broker (e.g., Kafka, RabbitMQ).
+        Contains:
+        Implementations of port/out/messaging interfaces (e.g., MessagingAdapter).

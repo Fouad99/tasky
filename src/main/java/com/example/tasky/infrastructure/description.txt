@@ -1,0 +1,66 @@
+Definition of Infrastructure Directory
+    The infrastructure directory contains the implementations of the outgoing ports (adapters) defined in the application/port/out package.
+    These adapters bridge the core business logic with external systems such as databases, external APIs, messaging systems, or other third-party services.
+    The goal of the infrastructure layer is to provide concrete implementations for the abstractions (ports) defined in the application layer while maintaining
+    the separation of concerns.
+
+Purpose of the Infrastructure Directory
+    Decouple External Systems from Core Logic: The infrastructure layer implements the interfaces defined in the ports, keeping the core business logic independent from the technical details of external systems.
+    Adapt Core Logic to External Systems: Provides the necessary adapters to interact with external systems such as databases, messaging queues, email services, etc.
+    Easily Replaceable Implementations: External systems (like databases or APIs) can be swapped or modified without affecting the core business logic.
+    Testability: By decoupling external services, the core business logic can be easily tested by mocking or stubbing the interfaces from the infrastructure layer.
+
+Possible Components in the Infrastructure Directory
+    1️⃣ Persistence
+    📌 Implements the TaskPersistencePort, UserPersistencePort, or any other port related to data storage.
+    🔹 Components:
+        Repositories/DAOs (e.g., TaskRepository, UserRepository) for interacting with databases (e.g., SQL or NoSQL).
+        JPA/Hibernate, Spring Data, or MongoDB integration to implement database CRUD operations.
+        Database configuration and connection management.
+
+    2️⃣ Messaging/Events
+    📌 Implements messaging-related ports such as NotificationPort, TaskAssignmentPort for integrating messaging or event-driven architectures.
+    🔹 Components:
+
+        Message Queues (e.g., Kafka, RabbitMQ) to handle event-driven messages (task assignments, user updates).
+        Event Listeners to process incoming events or trigger events for outbound communication.
+
+    3️⃣ External API Integrations
+    📌 Implements ports for interacting with external services such as payment processors, email providers, etc.
+    🔹 Components:
+
+        API Clients (e.g., for third-party integrations like email services, payment gateways).
+        REST clients or GraphQL clients for API communication.
+
+    4️⃣ Security
+    📌 Implements security-related ports, handling authentication and authorization.
+    🔹 Components:
+
+        JWT token management, OAuth for user authentication.
+        Security filters for handling user permissions and roles.
+
+    5️⃣ Configuration
+    📌 Manages configuration and settings for the application.
+    🔹 Components:
+
+        Configuration files (e.g., application.yml, .env).
+        Service configuration for setting up infrastructure services like database connections, external APIs, etc.
+
+
+Example Components in Infrastructure
+    Persistence:
+        JpaTaskRepository (implements TaskPersistencePort).
+        JpaUserRepository (implements UserPersistencePort).
+
+    Messaging:
+        KafkaNotificationAdapter (implements NotificationPort).
+        KafkaTaskAssignmentAdapter (implements TaskAssignmentPort).
+
+    External API:
+        EmailNotificationService (implements NotificationPort).
+
+
+
+
+
+

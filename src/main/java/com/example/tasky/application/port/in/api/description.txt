@@ -1,0 +1,30 @@
+the interfaces that should go into ports/in/api/ are the ones that define the entry points of your application—those exposed to external
+ users (REST controllers, CLI, etc.). These should not contain business logic but should serve as contracts that adapters (like REST controllers) implement.
+
+Candidates for ports/in/api/
+1️⃣ TaskApiPort
+
+Defines the contract for handling task-related operations from external users.
+Methods:
+    createTask(CreateTaskDto dto): TaskDto
+    updateTask(UUID taskId, UpdateTaskDto dto): TaskDto
+    getTaskById(UUID taskId): TaskDto
+    deleteTask(UUID taskId): void
+2️⃣ TaskAssignmentApiPort
+
+Defines the contract for assigning/unassigning tasks to users.
+Methods:
+    assignTaskToUser(UUID taskId, UUID userId): void
+    unassignTask(UUID taskId): void
+3️⃣ UserApiPort
+
+Defines the contract for handling user-related operations.
+Methods:
+    createUser(CreateUserDto dto): UserDto
+    updateUser(UUID userId, UpdateUserDto dto): UserDto
+    getUserById(UUID userId): UserDto
+    deleteUser(UUID userId): void
+Why These Interfaces Belong Here?
+✅ They represent external API contracts, meaning they are meant for controllers (REST, GraphQL, etc.) to implement.
+✅ They do not contain business logic—they simply define what external clients can do.
+✅ They help decouple the application layer from the framework (Spring controllers, etc.).

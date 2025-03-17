@@ -32,6 +32,16 @@ public class Task {
         this.updateTime = ZonedDateTime.now();
     }
 
+    public Task(UUID id, String title, String description, TaskStatus status, ZonedDateTime createTime, ZonedDateTime updateTime, UUID userId) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+        this.userId = userId;
+    }
+
     public UUID getId() {
         return id;
     }
@@ -75,9 +85,6 @@ public class Task {
     }
 
     public void updateStatus(TaskStatus status){
-        if (status == TaskStatus.COMPLETED){
-            throw new InvalidTaskStateException("Cannot update a completed task");
-        }
         this.status = status;
         this.updateTime = ZonedDateTime.now();
     }

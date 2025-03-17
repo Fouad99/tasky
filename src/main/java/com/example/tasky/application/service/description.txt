@@ -1,0 +1,19 @@
+Service Directory – Definition & Purpose
+The service/ directory is responsible for business logic orchestration. It acts as the implementation layer for the input ports (use cases),
+ensuring that the application's core operations are executed according to defined rules and workflows.
+
+What Goes Here?
+Service Implementations (impl/)
+
+Concrete classes that implement the input port interfaces (TaskManagementPort, TaskAssignmentPort, UserManagementPort).
+These services interact with the domain layer and delegate calls to the output ports when external interactions (e.g., persistence, APIs) are needed.
+Transactional Logic
+
+Ensures data integrity and consistency across different operations.
+Can be annotated with @Transactional when needed (e.g., Spring-managed transactions).
+Validation & Business Rules
+
+Enforces domain constraints and ensures that operations follow the correct business logic.
+Event Handling (Optional)
+
+If the system supports domain events, this layer may include logic to publish or react to them.
