@@ -1,6 +1,18 @@
-# Hexagonal Architecture Spring Boot EX
+# Hexagonal [Ports and Adapters] Architecture Spring Boot 
 
 A Spring Boot template implementing the Hexagonal Architecture pattern (also known as Ports and Adapters).
+
+- **Framework-agnostic at its core**: Business logic is independent of external frameworks.
+- **Modular and maintainable**: Clear separation between core domain, application logic, and infrastructure.
+
+## General Hexagonal diagram
+
+![General Hexagonal Architecture](image/hexa-arch.png)
+
+## Actual Hexagonal/Ports and adapters architecture diagram
+
+![General Hexagonal Architecture](image/hexagonal-case-arch.png)
+
 
 ## Overview
 
@@ -8,61 +20,68 @@ This project structure follows the hexagonal architecture pattern, organized int
 
 ```
 src/main/java/com/example/
-├── application/
-├── domain/
-└── infrastructure/
-```
+├──application/
+│  ├── port/
+│  │   ├── in/                         # Input ports (use cases the application offers)
+│  │   │   ├── api/                    # Interfaces consumed by driving adapters
+│  │   │   └── external/               # Interfaces through we are called by other services to call our service
+│  │   ├── out/                        # Output ports (services the application needs)
+│  │   │   ├── persistence/            # persistence interfaces for data source
+│  │   │   ├── external/               # Interfaces through we call External services
+│  │   │   └── Messaging/              # Interfaces for emitting msgs/streams
+│  │   ├── service/
+│  │   │   └── impl/                   # Implementations of use cases
+│  │   └── usecase/
+│  │       └──                         # List of use cases of the service (element of analysys of usecase UML diagrams)
+├──domain/
+│  ├── model/                          # Business models
+│  ├── exception/                      # Domain-specific exceptions
+├──infrastructure/
+│  ├── adapter/
+│  │    ├── in/                        # Incoming adapters (API controllers, event listeners)
+│  │    │   ├── impl/                  # Implementation of the Incoming port interfaces (such as api..etc)
+│  │    │   ├── rest/                  # REST controllers will use the the endpoint adapters
+│  │    │   ├── graphql                # GraphQL controllers 
+│  │    │   ├── event/                 # Event listeners (e.g., for message queues)
+│  │    │   └── security/              # Security layer (Authentication, Authorization)
+│  │    ├── out/                       # Outgoing adapters (external systems like DB, messaging)
+│  │    │   ├── persistence/           # Persistence layer (e.g., database interactions)
+│  │    │   ├── messaging/             # Messaging layer (e.g., for external messaging systems)
+│  │    │   └── externalApi/           # External APIs (e.g., third-party services)
+│  ├── config/                         # Configuration files for the application setup
 
+```
 
 ## Architecture Breakdown
 
-### Application Layer
+### 1. **Domain Layer (**``**)**
 
-The application layer contains ports (interfaces) that define how the outside world interacts with the core domain, along with the service implementations that coordinate domain operations.
+This layer contains **pure business logic** and is completely independent of frameworks.
 
-```
-application/
-├── port/
-│   ├── in/               # Input ports (use cases the application offers)
-│   │   └── api/          # Interfaces consumed by driving adapters
-│   └── out/              # Output ports (services the application needs)
-│       ├── persistence/  # Repository interfaces
-│       └── external/     # External service interfaces
-└── service/
-    └── impl/             # Implementations of input ports using domain logic
-```
+-  Business entities (core objects that represent the domain)
+-  Custom exceptions related to the domain
 
-### Domain Layer
+### 2. **Application Layer (**``**)**
 
-The domain layer contains core business entities and logic, free from infrastructure concerns.
+This is where business rules and application logic reside.
 
-```
-domain/
-├── model/                # Business entities
-├── exception/            # Domain-specific exceptions
-```
+-   Defines input ports (use cases) consumed by controllers and event handlers.
+-   Defines output ports that interact with external dependencies (database, APIs, etc.).
+-   Implements use cases by orchestrating domain logic.
+-  for the service package :
+   - Reason:
+      - Separation of concerns: The application/service/impl package is where the core business logic should reside.
+      - Adherence to Hexagonal Architecture: The service/impl classes implement the interfaces defined in port/in, orchestrating the application logic and interacting with the domain models.
 
-### Infrastructure Layer
+### 3. **Infrastructure Layer (**``**)**
 
-The infrastructure layer contains adapter implementations that connect the application to external systems.
+This layer bridges the application with external technologies.
 
-```
-infrastructure/
-├── adapter/
-│   ├── in/               # Inbound (driving) adapters
-│   │   ├── web/          # REST API implementation
-│   │   │   ├── controller/
-│   │   │   ├── dto/      # Data transfer objects
-│   │   │   └── mapper/   # DTOs to domain mappers
-│   │   └── event/        # Event-based adapters
-│   └── out/              # Outbound (driven) adapters
-│       ├── persistence/  # Database implementations
-│       │   ├── entity/   # JPA entities
-│       │   ├── repository/
-│       │   └── mapper/   # Entity to domain mappers
-│       └── external/     # External API clients
-└── config/               # Configuration classes
-```
+- **Adapters**
+   - **Inbound (**``**)** → Implements input ports via controllers (e.g., REST, GraphQL, Event listeners).
+   - **Outbound (**``**)** → Implements output ports via persistence (JPA, MongoDB) and external services (REST clients, Kafka producers).
+   -   Centralized Spring Boot configurations (e.g., database, security, API clients).
+
 
 ## Key Principles
 
@@ -86,63 +105,27 @@ infrastructure/
 - Adapters can be swapped without affecting the core
 - Improved testability with cleaner unit tests
 
-## Technologies
+## Nota bene
 
-- Java 21 with GraalVM
-- Spring Boot 3.2.x
-- Maven for dependency management
-- Spring Data JPA for persistence
-- H2 Database for development
-- Lombok for reducing boilerplate
-- MapStruct for object mapping
+1. Naming Conventions and Consistency
+   make sure all names are as clear as possible to avoid ambiguity. For example:
+   application/port/: It would be clearer if the directory name reflects the nature of the ports more directly, like application/adapter/ (to emphasize the distinction between inbound/outbound) or application/contract/ for clearer contract boundaries. current is acceptable
+   in/ and out/: they work. Also could use "driven" or "driving" adapters
 
-## Getting Started
+2. Service Layer Placement
+   The service/impl/ directory under application/ is where implementation logic should reside. While this works well for organizing services, we need to ensure that the domain logic (business rules) remains in the domain layer, keeping the service layer strictly for coordinating use cases.
 
-1. Clone this repository
-2. Build with Maven: `mvn clean install`
-3. Run the application: `mvn spring-boot:run`
+3. Persistence Layer
+   infrastructure/adapter/out/persistence/:  using a clean separation for persistence. we add repository/impl/ for actual JPA repository implementations when we expect more than one type of persistence approach (e.g., NoSQL).
 
-## Testing
+4. External APIs and Clients
+   infrastructure/adapter/out/external/: It's great that you're separating external APIs into their own adapter layer. Be sure to avoid mixing external service logic with core business logic in this layer.
 
-The project includes test directories organized according to the hexagonal architecture:
+5. Exception Handling
+   domain/exception/: This directory is for domain-specific exceptions. However, the way exceptions are handled between layers should be consistent. Ensure exceptions thrown by the domain are properly translated to something suitable for the service or infrastructure layer (e.g., validation errors, business rule violations).
+   If you're using custom exceptions, it may help to categorize them based on the layer or purpose (e.g., validation, persistence, integration).
 
-```
-src/main/java/com/example/
-├── application/
-│   ├── port/
-│   ├── in/               # Input ports (use cases the application offers)
-│   │   └── api/          # Interfaces consumed by driving adapters
-│   └── out/              # Output ports (services the application needs)
-│       ├── persistence/  # Repository interfaces
-│       └── external/     # External service interfaces
-│    └── service/
-│        └── impl/             # Implementations of input ports using domain logic
-├── domain/
-│    ├── model/                # Business entities
-│    ├── exception/            # Domain-specific exceptions
-├── infrastructure/
-│    ├── adapter/
-│    │       ├── in/                        # Incoming adapters (API controllers, event listeners)
-│    │       │   ├── rest/                   # Web layer for HTTP requests (e.g., REST)
-│    │       │   │   ├── TaskController.java
-│    │       │   │   ├── UserController.java
-│    │       │   ├── graphql
-│    │       │   ├── event/             # Event listeners (e.g., for message queues)
-│    │       │   │   └── UserEventListener.java
-│    │       │   └── security/              # Security layer (Authentication, Authorization)
-│    │       │   │      └── SecurityController.java
-│    │       ├── out/                       # Outgoing adapters (external systems like DB, messaging)
-│    │       │   ├── persistence/           # Persistence layer (e.g., database interactions)
-│    │       │   │   ├── TaskPersistenceAdapter.java
-│    │       │   │   ├── UserPersistenceAdapter.java
-│    │       │   │   └── UserPersistenceService.java
-│    │       │   ├── messaging/             # Messaging layer (e.g., for external messaging systems)
-│    │       │   │   └── NotificationAdapter.java
-│    │       │   └── externalApi/           # External APIs (e.g., third-party services)
-│    │       │          └── ExternalApiAdapter.java
-│    ├── config/                        # Configuration files for the application setup
-│            ├── DatabaseConfig.java        # Database connections and setups
-│            ├── MessagingConfig.java       # External messaging system configurations
-│            └── SecurityConfig.java        # Security configurations (JWT, OAuth, etc.)
-
-```
+**Potential Enhancements or Considerations**
+- Integration Tests:  placing integration tests for ports/adapters under a different package (e.g., src/test/integration/) to make it clear these tests will span across layers.
+- Use of Annotations: If your application grows, consider using custom annotations for your layers, like @Service, @Port, @Adapter to enforce clear boundaries and improve readability.
+- Event-Driven Approach: If you anticipate scaling to a more event-driven architecture, consider making event-related adapters a more prominent part of the structure, separating domain and application events.

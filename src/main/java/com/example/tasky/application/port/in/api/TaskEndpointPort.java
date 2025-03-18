@@ -8,6 +8,5 @@ public interface TaskEndpointPort {
     TaskDto createTask(TaskDto taskDto);
     TaskDto updateTask(UUID taskId, TaskDto taskDto);
     TaskDto getTaskById(UUID taskId);
-    void deleteTask(UUID taskId);
 }
 

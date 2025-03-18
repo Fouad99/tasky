@@ -1,6 +1,6 @@
 package com.example.tasky.infrastructure.adapter.in.rest;
 
-import com.example.tasky.application.port.in.api.TaskAssignmentEndpointPort;
+import com.example.tasky.infrastructure.adapter.in.impl.TaskAssignmentEndpointAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,17 +12,17 @@ import java.util.UUID;
 @RequestMapping("/api/task-assignement")
 public class TaskAssignmentController {
 
-    private final TaskAssignmentEndpointPort taskAssignmentEndpointPort;
+    private final TaskAssignmentEndpointAdapter taskAssignmentEndpointAdapter;
 
     @Autowired
-    public TaskAssignmentController(TaskAssignmentEndpointPort taskAssignmentEndpointPort) {
-        this.taskAssignmentEndpointPort = taskAssignmentEndpointPort;
+    public TaskAssignmentController(TaskAssignmentEndpointAdapter taskAssignmentEndpointAdapter) {
+        this.taskAssignmentEndpointAdapter = taskAssignmentEndpointAdapter;
     }
 
     @PostMapping("/assign")
     public ResponseEntity<Void> assignTaskToUser(@PathVariable UUID taskId, @PathVariable UUID userId) {
         try {
-            taskAssignmentEndpointPort.assignTaskToUser(taskId, userId);
+            this.taskAssignmentEndpointAdapter.assignTaskToUser(taskId, userId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -32,7 +32,7 @@ public class TaskAssignmentController {
     @DeleteMapping("/unassign")
     public ResponseEntity<Void> unassignTask(@PathVariable UUID taskId) {
         try {
-            taskAssignmentEndpointPort.unassignTask(taskId);
+            this.taskAssignmentEndpointAdapter.unassignTaskFromUser(taskId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

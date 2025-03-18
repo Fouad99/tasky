@@ -40,9 +40,4 @@ public class UserPersistenceAdapter implements UserPersistencePort {
         List<UserEntity> userEntities = userRepository.findAll();
         return userEntities.stream().map(UserMapper::toDomainModel).toList();
     }
-
-    @Override
-    public void deleteUser(UUID userId) {
-        userRepository.deleteById(userId);
-    }
 }

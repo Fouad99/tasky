@@ -1,0 +1,2 @@
+DTOs could go to infra if we want, but we don t forget that DTOs are coupled to the port/in/api since it is part of the endpoint signatures. Therefore
+could be interesting to leave the DTOs as part of the application layer rather than the infrastructure

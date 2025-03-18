@@ -10,5 +10,4 @@ public interface TaskPersistencePort {
     Task saveTask(Task task);
     Optional<Task> findTaskById(UUID taskId);
     List<Task> findAllTasks();
-    void deleteTask(UUID id);
 }

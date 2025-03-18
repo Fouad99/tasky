@@ -1,7 +1,7 @@
 package com.example.tasky.infrastructure.adapter.in.rest;
 
 import com.example.tasky.application.dto.TaskDto;
-import com.example.tasky.application.port.in.api.TaskEndpointPort;
+import com.example.tasky.infrastructure.adapter.in.impl.TaskEndpointAdapter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,35 +12,29 @@ import java.util.UUID;
 @RequestMapping("/api/tasks")
 public class TaskController {
 
-    private final TaskEndpointPort taskEndpointPort;
+    private final TaskEndpointAdapter taskEndpointAdapter;
 
-    public TaskController(TaskEndpointPort taskEndpointPort) {
-        this.taskEndpointPort = taskEndpointPort;
+    public TaskController(TaskEndpointAdapter taskEndpointAdapter) {
+        this.taskEndpointAdapter = taskEndpointAdapter;
     }
-
 
     @GetMapping("/{taskId}")
     public ResponseEntity<TaskDto> getTaskById(@PathVariable UUID taskId) {
-        TaskDto taskDto = taskEndpointPort.getTaskById(taskId);
+        TaskDto taskDto = this.taskEndpointAdapter.getTaskById(taskId);
         return taskDto != null ? new ResponseEntity<>(taskDto, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
     public ResponseEntity<TaskDto> createTask(@RequestBody TaskDto taskDto) {
-        TaskDto createdTask = taskEndpointPort.createTask(taskDto);
+        TaskDto createdTask = this.taskEndpointAdapter.createTask(taskDto);
         return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
     }
 
     @PutMapping("/{taskId}")
     public ResponseEntity<TaskDto> updateTask(@PathVariable UUID taskId, @RequestBody TaskDto taskDto) {
-        TaskDto updatedTask = taskEndpointPort.updateTask(taskId, taskDto);
+        TaskDto updatedTask =this.taskEndpointAdapter.updateTask(taskId, taskDto);
         return new ResponseEntity<>(updatedTask, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{taskId}")
-    public ResponseEntity<Void> deleteTask(@PathVariable UUID taskId) {
-        taskEndpointPort.deleteTask(taskId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
 }

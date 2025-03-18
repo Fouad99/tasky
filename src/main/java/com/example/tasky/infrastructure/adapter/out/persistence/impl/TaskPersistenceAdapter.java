@@ -40,8 +40,4 @@ public class TaskPersistenceAdapter implements TaskPersistencePort {
         return tasksEntity.stream().map(TaskMapper::toDomainModel).toList();
     }
 
-    @Override
-    public void deleteTask(UUID id) {
-        taskRepository.deleteById(id);
-    }
 }

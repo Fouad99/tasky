@@ -10,5 +10,4 @@ public interface UserPersistencePort {
     User saveUser(User user);
     Optional<User> findUserById(UUID userId);
     List<User> findAllUsers();
-    void deleteUser(UUID userId);
 }
